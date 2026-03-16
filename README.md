@@ -1,60 +1,113 @@
-# mammography-survival-colombia
+# Reproducibility notes
 
-Stata code and documentation for the analysis of biennial mammography adherence and five-year survival among women over 50 with breast cancer in Colombia.
+## Purpose of this repository
 
-## Overview
+This repository provides the Stata code and documentation used in the analysis of biennial mammography adherence and five-year survival among women over 50 with breast cancer in Colombia.
 
-This repository contains the analytic code and supporting documentation used in a study evaluating the association between biennial mammography adherence and five-year survival among Colombian women aged over 50 years with breast cancer.
+The repository was prepared to support transparency and reproducibility of the analytic workflow while respecting the legal and administrative restrictions applicable to the underlying health databases.
 
-The repository is intended to improve transparency and reproducibility of the analytical workflow. It does not contain raw or derived individual-level data.
+## Analytical environment
 
-## Study summary
+- Software: Stata 17.0 MP—Parallel Edition
+- Operating system used in the original analysis: Windows
+- Original analysis date reflected in the log: 16 March 2026
 
-The study used restricted administrative health databases from Colombia to assemble a cohort of women with breast cancer and evaluate the association between adherence to biennial mammography and all-cause mortality using propensity score matching and survival analysis.
+## Source data
 
-## Repository contents
+The original analysis used a restricted Stata dataset derived from anonymized Colombian administrative health databases. In the analytical log, the input file was:
 
-- `analysis_survival.do`  
-  Main Stata script used for data preparation, propensity score matching, descriptive analyses, and survival analyses.
+- `mam_def_15_16.dta`
 
-- `reproducibility_notes.md`  
-  Technical notes describing software requirements, data restrictions, workflow, and execution considerations.
+This file is not included in the repository because the underlying data are third-party data owned by the Colombian Ministry of Health and Social Protection and cannot be publicly redistributed by the authors.
 
-- `LICENSE`  
-  MIT License.
+The study used the following source databases:
 
-Additional documentation files may be added, including a variable dictionary and supporting methodological notes.
+- PILA: Wages Database
+- UPC: Capitation Unit Sufficiency Study Database
+- BDUA: Unique Enrollees Database
+- RUAF: Mortality Registry Module
 
-## Software
+## Access to data
 
-- Stata 17.0 MP—Parallel Edition
+The raw data used in this study are third-party anonymized administrative databases owned by the Colombian Ministry of Health and Social Protection, including PILA, UPC, BDUA, and RUAF. These data were provided for research purposes and are subject to legal and administrative restrictions, so they cannot be publicly shared by the authors. Researchers may request access directly from the Ministry’s Office of Information Technologies at correo@minsalud.gov.co. The authors did not receive special access privileges.
 
-## Data availability
+## Publicly shared materials
 
-The raw administrative data used in this study are third-party data owned by the Colombian Ministry of Health and Social Protection and cannot be publicly shared by the authors.
+This repository may include:
 
-Other researchers may request access to these data through the same official procedures used by the authors, subject to the Ministry’s legal and administrative requirements. The authors did not receive special access privileges.
+- Main Stata analysis script
+- README documentation
+- Reproducibility notes
+- Additional supporting methodological documents
 
-This repository does not include raw data, analytic datasets, or any individual-level health information. It only provides the analytic code and documentation required to understand and reproduce the analytical workflow.
+This repository does not include:
 
-## Reproducibility
+- Raw data
+- Derived analytic datasets
+- Any file containing directly identifiable personal information
+- Local logs with sensitive file paths
 
-Because the source data are restricted, this repository does not allow direct rerunning of the full analysis without prior authorization to access the underlying administrative databases. However, it provides the code structure, variable logic, and analytical workflow used in the study.
+## Main analytical workflow
 
-Users who obtain authorized access to the original source data may adapt the scripts to their local environment and reproduce the analysis.
+The main script performs the following general steps:
 
-## Notes for users
+1. Opens the analytic dataset.
+2. Produces descriptive information for the cohort.
+3. Generates baseline descriptive analyses.
+4. Implements propensity score matching.
+5. Evaluates post-matching balance.
+6. Fits survival analyses for mortality outcomes.
+7. Produces model outputs and supporting results.
 
-- File paths in the original analytical environment were removed or generalized for public release.
-- Users may need to adapt directory structure and input/output paths before running the scripts.
-- User-written Stata commands may be required depending on the analysis step and local implementation.
+## Key variables documented in the codebook
 
-## Citation
+Selected variables documented in the shared codebook include:
 
-If you use or adapt this repository, please cite the corresponding manuscript when available.
+- `PersonaBasicaID`: subject identifier
+- `eps`: insurer category
+- `edad_tto`: age at treatment
+- `edad11`: age at baseline/reference period
+- `depto_r`: department
+- `reg_r`: region
+- `iam`, `icc`, `evp`, `acv`, `deme`, `epc`, `enf_conec`, `ulc_pep`, `enf_hep`, `dm`, `dm_compl`, `paraple`, `enf_ren`, `can_meta`, `enf_hep_seve`, `vih`: comorbidity indicators
+- `ind_char`: comorbidity summary score
+- `icc_cat`: grouped comorbidity category
+- `est`: cancer stage category
+- `f_tto`: treatment date
+- `mamg_2`: biennial mammography adherence exposure
+- `mort`: mortality indicator
+- `f_mort`: date of death
+- `f_dx`: diagnosis date
+- `mamg`: mammography count
+- `t_1`: time-to-event variable
 
-## Contact
+## Cohort structure documented in the codebook
 
-For questions regarding the code and repository contents, contact the corresponding study authors through the manuscript record or repository profile.
+The codebook provided for the analytic dataset reports:
 
-For access to the restricted source data, contact the Colombian Ministry of Health and Social Protection through its official data access procedures.
+- 2,452 observations
+- treatment years concentrated in 2015 and 2016
+- binary exposure variable `mamg_2`
+- binary mortality outcome `mort`
+
+These details are included only to describe the analytical structure and not to redistribute underlying data.
+
+## Execution notes
+
+Before running the script:
+
+1. Place the authorized input dataset in a local working directory that is not publicly shared.
+2. Review and adapt all directory globals or local paths.
+3. Confirm that required Stata user-written commands are installed.
+4. Review output destinations for logs, tables, and figures.
+
+## User-written Stata commands
+
+The analysis workflow uses propensity score matching procedures. If needed, install:
+
+- `psmatch2`
+
+Example:
+
+```stata
+ssc install psmatch2
